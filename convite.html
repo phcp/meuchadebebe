@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"></meta>
+	<title>Convite - Meu Chá de Bebê</title>
+	<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link href="css/style.css" media="all" rel="stylesheet" type="text/css" />
+	<link href='https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,200' rel='stylesheet' type='text/css'>
+	<link rel="shortcut icon" href="images/favicon.png">
+	<script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+	<script src="js/jquery-dateFormat.min.js"></script>
+	<script src="js/jquery-extend.js"></script>
+	<script src="js/underscore-min.js"></script>
+	<script src="https://www.parsecdn.com/js/parse-1.2.13.min.js"></script>
+	<script src="js/invite-core.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div id="fb-root"></div>
+
+	<div id="meuchadebebe" class="container">
+		<div class="header">
+			<img src="images/logo.png" width="300" />
+		</div>
+		<div id="error" class="alert alert-danger" role="alert" style="display:none"></div>
+		<div class="page">
+			<div class="row">
+				<div class="col-lg-12" id="content">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Templates -->
+	<script type="text/template" id="invite-template">
+	<div id="invite-screen">
+		<h1>Convite</h1>
+		<h3>Você foi convidado para o chá de bebê de <%= nomedobebe %>.</h3>
+		<p>
+			<i><%= mensagem %></i> <br/>
+			<strong>Sobre o Evento: </strong><%= descricao %> <br/>
+			<strong>Data/Hora: </strong><%= data %> <br/>
+		</p>
+		<h3>Você poderá comparecer?</h3>
+		<button id="btn-sim" class="btn btn-success btn-lg">Sim</button>
+		<button id="btn-nao" class="btn btn-danger btn-lg">Não</button>
+	</div>
+	</script>
+
+	<script type="text/template" id="reject-template">
+	<div id="reject-screen">
+		<h1>:(</h1>
+		<h3>Que pena, esperamos que na próxima você possa.</h3>
+		<h5>O convite ainda ficará aberto para caso mude de ideia, você pode acessá-lo através do link no Facebook.</h5>
+		<br/><br/><br/>
+
+		<h3>Seu filho está pra chegar?</h3>
+		<a href="index.html" class="btn btn-link">Clique aqui para organizar seu chá de bebê.</a>
+	</div>
+	</script>
+
+	<script type="text/template" id="giftslist-template">
+	<div id="reject-screen">
+	</div>
+	</script>
+
+	<script type="text/template" id="presente-template">
+	<div id="escolha-presentes">
+	<h1>Agora vamos aos Presentes! </h1>
+	<p>Escolha qual dos presentes da lista abaixo você vai levar.</p>
+	<table class="table">
+	<thead>
+		<th>Presentear</th>
+		<th>Presente</th>
+		<th>Quantidade</th>
+		<th>Quantidade Atendida</th>
+	</thead>
+	<tbody id="gifts-list"></tbody>
+    </table>
+    </div>
+	<div class="clear"></div>
+	</script>
+
+	<script type="text/template" id="item-presente-template">
+	<td class="view">
+		<button class="presente-ok btn btn-xs btn-success glyphicon glyphicon-ok"></button>
+	</td>
+	<td class="view">
+		<label class="presente-nome-content"> <%= _.escape(nome) %></label>
+	</td>
+	<td class="view">
+		<label class="presente-quantidade-content"> <%= _.escape(quantidade) %></label>
+	</td>
+	<td class="view">
+		<label class="presente-quantidade-atendida-content"> <%= _.escape(quantidadeAtendida) %></label>
+	</td>
+    </script>
+</body>
+</html>

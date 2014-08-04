@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"></meta>
+	<title>Meu Chá de Bebê</title>
+	<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link href="css/style.css" media="all" rel="stylesheet" type="text/css" />
+	<link href='https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,200' rel='stylesheet' type='text/css'>
+	<link rel="shortcut icon" href="images/favicon.png">
+	<script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+	<script src="js/jquery-extend.js"></script>
+	<script src="js/jquery-dateFormat.min.js"></script>
+	<script src="js/underscore-min.js"></script>
+	<script src="https://www.parsecdn.com/js/parse-1.2.13.min.js"></script>
+	<script src="js/moms-core.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div id="fb-root"></div>
+	<script>
+	window.fbAsyncInit = function() {
+		Parse.FacebookUtils.init({
+			appId      : '1462115917379234',
+			channelUrl : 'https://blmusic.com.br/tmp/MeuChaDeBebe2', 
+			cookie     : true,
+			xfbml      : true 
+		});
+	};
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/pt_BR/all.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+	</script>
+
+	<div id="meuchadebebe" class="container">
+		<div class="header">
+			<img src="images/logo.png" width="300" />
+		</div>
+		<div id="error" class="alert alert-danger" role="alert" style="display:none"></div>
+		<div class="page">
+			<div class="row">
+				<div class="col-lg-12" id="full-content">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3" id="side-menu">
+				</div>
+				<div class="col-md-9" id="content">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Templates -->
+	<script type="text/template" id="login-template">
+	<img class="image-home" src="images/home.jpeg" />
+	<form class="login-form">
+		<button class="btn btn-primary btn-lg center-block">Entrar com o Facebook</button>
+	</form>
+	</script>
+
+	<script type="text/template" id="menu-template">
+	<div id="user-info">
+	<img class="img-circle" src='<%= Parse.User.current().escape("picture") %>' />
+	Olá <%= Parse.User.current().escape("name") %>
+	</div>
+
+	<ul id="menu" class="nav nav-pills nav-stacked">
+	  <li><a href="#" id="inicio">Início</a></li>
+	  <li><a href="#" id="lista-presentes">Lista de Presentes</a></li>
+	  <li><a href="#" id="convidar">Convidar Amigos</a></li>
+	  <li><a href="#" id="editar-evento">Editar Chá de Bebê</a></li>
+	  <li><a href="#" id="logout">Sair</a></li>
+	</ul>
+	</div>
+	</script>
+
+	<script type="text/template" id="moms-template">
+		<div class="row">
+			<div class="col-lg-12">
+				<h2>Chá de Bebê: <%= nomedobebe %></h2>
+				<p><strong>Sobre o evento:</strong> <%= descricao %></p>
+				<p><strong>Data/Hora:</strong> <%= data %></p>
+			</div>
+		</div>
+		<div class="row stats">
+			<div class="col-md-4 stats">
+				Faltam apenas
+				<div class="number"><%= diasCont %></div>
+				dias!
+			</div>
+			<div class="col-md-4 stats">
+				Você já tem
+				<div class="number"><%= convidadosCont %></div>
+				convites aceitos.
+			</div>
+			<div class="col-md-4 stats">
+				Já foram escolhidos
+				<div class="number"><%= presentesCont %></div>
+				presentes.
+			</div>
+		</div>
+	</script>
+
+	<script type="text/template" id="event-template">
+	<h2>Editar Chá de Bebê</h2>
+	<form class="event-form" role="form">
+		<input id="event-objectId" class="hidden" type="hidden" />
+	    <input id="event-nomedobebe" class="form-control" placeholder="Qual o nome do bebê?" type="text" /><br/>
+	    <textarea id="event-descricao" class="form-control" placeholder="Como será a dinâmica? Precisará levar comidas/bebidas? Onde será o evento? Fale um pouco sobre o chá de bebê aqui." type="text" /><br/>
+	    <label for="event-data">Quando irá ocorrer?</label>
+	    <input id="event-data" class="form-control" type="datetime-local" /><br/>
+		<button class="btn btn-primary">Salvar</button>
+		<div class="clear"></div>
+	</form>
+	</script>
+
+	<script type="text/template" id="presente-template">
+	<h2>Lista de Presentes</h2>
+	<form class="presente-form" role="form">
+		<input id="event-nomedopresente" class="form-control" placeholder="Presente" type="text" /><br/>
+		<input id="event-quantidadedopresente" class="form-control" placeholder="Quantidade" type="text" /><br/>
+		<button class="btn">Adicionar</button>
+		<div id="div-lista-presentes">
+		</div>
+		<table class="table">
+		<thead>
+			<th>Presente</th>
+			<th>Quantidade</th>
+			<th>Remover</th>
+		</thead>
+		<tbody id="gifts-list"></tbody>
+        </table>
+		<div class="clear"></div>
+	</form>
+	</script>
+
+	<script type="text/template" id="item-presente-template">
+	<td class="view">
+		<label class="presente-nome-content"> <%= _.escape(nome) %></label>
+		<input id="<%= _.escape(objectId) %>" class="edit" value="<%= _.escape(nome) %>"> </input>
+	</td>
+	<td class="view">
+		<label class="presente-quantidade-content"> <%= _.escape(quantidade) %></label>
+	    <input id="<%= _.escape(objectId) %>" class="edit" value="<%= _.escape(quantidade) %>"> </input>
+	</td>
+	<td class="view">
+		<button class="presente-delete btn btn-xs btn-danger glyphicon glyphicon-remove"></button>
+	</td>
+    </script>
+
+	<script type="text/template" id="invite-template">
+	<h2>Convidar Amigos</h2>
+	<form class="invite-form" role="form">
+	    <input id="invite-message" class="form-control" placeholder="Qual a mensagem do convite?" type="text" maxlength="100" /><br/>
+		<button class="btn btn-primary">Escolher Amigos</button>
+		<div class="clear"></div>
+	</form>
+	</script>
+</body>
+</html>
